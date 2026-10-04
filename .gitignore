@@ -1,0 +1,19 @@
+# Build output
+/target
+
+# IDEs
+/.idea
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+/.settings
+/.vscode
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

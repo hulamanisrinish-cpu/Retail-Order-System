@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      # Runs the full build plus the two self-contained Testcontainers
+      # integration suites (Docker is preinstalled on GitHub runners).
+      # OrderControllerIntegrationTest is excluded because it expects a
+      # running docker-compose stack on localhost.
+      - name: Build and run tests
+        run: mvn -B verify -Dtest='!OrderControllerIntegrationTest'
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: target/surefire-reports
+          if-no-files-found: ignore
